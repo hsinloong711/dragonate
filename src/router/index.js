@@ -5,7 +5,10 @@ import HomeRedirect from "../views/home/HomeRedirect.vue";
 import About from "../views/About.vue";
 import SignIn from "../views/user/SignIn.vue";
 import Register from "../views/user/Register.vue";
+import Cart from "../views/Cart.vue";
 import Shop from "../views/Shop.vue";
+import Details from "../views/Details.vue";
+import Create from "../views/Create.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -31,6 +34,15 @@ const router = createRouter({
       // // which is lazy-loaded when the route is visited.
       // component: () => import('../views/AboutView.vue')
     },
+    // {
+    //   path: "/order",
+    //   name: "order",
+    //   component: OrderHistory,
+    //   // Metadata hook, create meta and inside set requiresAuth to true, meaning only logged in users can access.
+    //   meta: {
+    //     requiresAuth: true,
+    //   },
+    // },
     {
       path: "/signin",
       name: "signin",
@@ -46,7 +58,25 @@ const router = createRouter({
       name: "shop",
       component: Shop,
     },
+    {
+      path: "/products/:id",
+      name: "details",
+      component: Details,
+      props: true,
+    },
+    {
+      path: "/create",
+      name: "create",
+      component: Create,
+    },
+    {
+      path: "/cart",
+      name: "cart",
+      component: Cart,
+    },
   ],
 });
+
+// Navigation guard, beforeEach hook which runs before vuerouter processes its routes
 
 export default router;

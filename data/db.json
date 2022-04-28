@@ -1,0 +1,58 @@
+{
+  "products": [
+    {
+      "name": "Earphone",
+      "stock": 100,
+      "description": "Hi guys, this is a shop with product list. You can create the products on your own to put for sale after logging in.",
+      "price": 100,
+      "id": 1
+    },
+    {
+      "name": "A bottle",
+      "stock": 217,
+      "description": "This is a big bottle, only available in yellow colour.",
+      "price": 20,
+      "id": 2
+    },
+    {
+      "name": "A pen",
+      "stock": 100,
+      "description": "A pen",
+      "price": 100,
+      "uid": "Z51Mb56wMaV3vAD8WaUSwWNAtMI3",
+      "user": "hsinloong711",
+      "timestamp": "2022-4-2716:33:1",
+      "id": 3
+    },
+    {
+      "name": "hey",
+      "stock": 123,
+      "description": "123",
+      "price": 1,
+      "uid": "Z51Mb56wMaV3vAD8WaUSwWNAtMI3",
+      "user": "hsinloong711",
+      "timestamp": "2022-4-2716:56:39",
+      "id": 4
+    },
+    {
+      "name": "hey",
+      "stock": 1,
+      "description": "1",
+      "price": 1,
+      "uid": "Z51Mb56wMaV3vAD8WaUSwWNAtMI3",
+      "user": "hsinloong711",
+      "timestamp": "2022-4-2717:20:42",
+      "id": 5
+    },
+    {
+      "name": "hey",
+      "stock": 1,
+      "description": "1",
+      "price": 1,
+      "uid": "ExQNrFYop2VHvJYT8mwwsugUQjm2",
+      "user": "garytsai711",
+      "timestamp": "2022-4-2722:20:39",
+      "id": 6
+    }
+  ]
+}

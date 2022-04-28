@@ -49,20 +49,27 @@ export default {
 </script>
 
 <style scoped>
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
 form {
   display: block;
   text-align: center;
   font: 16px/30px "D-DIN", Arial;
   margin-top: 120px;
-  /* padding-left: 12px; */
+  padding-left: 12px;
+  /* position: fixed; */
 }
 
 #address {
+  justify-content: center;
   /* font: 14px "D-DIN", Arial; */
   font-family: "D-DIN", Arial;
   font-weight: 700;
   background-color: #51596c;
-  border: 1px solid #b8b8b8;
+  border: 1px solid white;
   transition: 0.4s;
   outline: none;
   padding: 15px;
@@ -80,7 +87,7 @@ input::placeholder {
 .order-button {
   font-family: "D-DIN", Arial;
   font-weight: 700;
-  border: 1px solid #b8b8b8;
+  border: 1px solid black;
   transition: 0.4s;
   color: hsla(160, 100%, 37%, 1);
   border-radius: 4px;
@@ -98,7 +105,25 @@ input::placeholder {
 
 .order-button:hover {
   cursor: pointer;
+  background-color: #51596c;
 }
+
+/* Disable autofill highlighting */
+input:-webkit-autofill {
+  -webkit-text-fill-color: var(--text-input-color) !important;
+  background-clip: text !important;
+  background-color: #51596c;
+  color: #51596c;
+}
+
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  box-shadow: 0 0 0 1000px #51596c inset !important;
+  -webkit-box-shadow: 0 0 0 1000px #51596c inset !important;
+  -webkit-text-fill-color: white !important;
+}
+
 .privacy {
   font-family: "D-DIN", Arial;
   font-size: 14px;
@@ -119,16 +144,4 @@ input::placeholder {
   transition: 0.5s all ease;
   color: white;
 }
-
-/* .empty_name {
-  display: block;
-  text-align: center;
-  font: 14px/28px "D-DIN", Arial;
-  font-weight: bold;
-  color: white;
-  font-weight: 400;
-  max-width: 435px;
-  color: #ff160c;
-  padding: 0;
-} */
 </style>

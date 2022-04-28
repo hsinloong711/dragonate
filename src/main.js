@@ -4,6 +4,7 @@ import { createPinia } from "pinia";
 import App from "./App.vue";
 import router from "./router";
 
+import "firebase/firestore";
 // Vue.config.productionTip = false;
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
@@ -23,7 +24,12 @@ const firebaseConfig = {
   measurementId: "G-WXSS5FYSJJ",
 };
 
+// Initialise firebase
 initializeApp(firebaseConfig);
+// Initialise firestore service
+// const projectFirestore = firebase.firestore();
+
+// export { projectFirestore };
 
 const app = createApp(App);
 

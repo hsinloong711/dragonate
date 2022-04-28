@@ -1,18 +1,17 @@
 <template>
   <div class="background">
     <h2>Your portal to fast-speed</h2>
-    <form @submit.prevent class="border">
+    <form @submit.prevent>
       <h3>Log-in</h3>
       <div class="form-container">
         <input
           type="text"
           class="input"
-          placeholder="Email (e.g. dragonate@outlook.com)"
+          placeholder="Email"
           autocomplete="off"
           v-model="email"
         />
       </div>
-      <div>&nbsp;</div>
 
       <div class="form-container">
         <input
@@ -23,8 +22,6 @@
           v-model="password"
         />
       </div>
-      <div v-if="errMsg" class="error">{{ errMsg }}</div>
-      <div v-else>&nbsp;</div>
 
       <div class="form-container">
         <button @click="register" class="login-button">Log-in</button>
@@ -46,22 +43,42 @@
           >.
         </p>
       </div>
-      <button @click="signInWithGoogle">Sign in with Google</button>
+
+      <div class="additional">
+        <p>________________________________________________</p>
+      </div>
+      <button @click="signInWithGoogle" class="google-button">
+        Sign in with Google 🌎
+      </button>
     </form>
+
+    <div v-if="errorMsg" class="error">{{ errorMsg }}</div>
+    <div v-else>&nbsp;</div>
   </div>
 </template>
 
 <script>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
 export default {
   setup() {
     const email = ref("");
     const password = ref("");
-    const errMsg = ref("");
+    const errorMsg = ref("");
     const router = useRouter();
 
+    // First import Firebase Authentication API to sign in our existing users.
+
+    // signInWithEmailAndPassword function is accessible by getAuth method which takes in existing user email.value and password.value
+    // and returns a promise. Use .then to cache successful response and .catch to catch error
+
+    // Also display error message captured by Firebase error.code cases to inform our users
     const register = () => {
       const auth = getAuth();
       signInWithEmailAndPassword(auth, email.value, password.value)
@@ -74,23 +91,37 @@ export default {
         .catch((error) => {
           console.log(error.code);
           switch (error.code) {
-            // case "auth/invalid-email":
-            //   errMsg.value = "Invalid email address.";
-            //   break;
             case "auth/user-not-found":
-              errMsg.value = "No account with that email was found.";
+              errorMsg.value = "No account with that email was found.";
+              break;
+            case "auth/invalid-email":
+              errorMsg.value = "Email or password is incorrect.";
               break;
             case "auth/wrong-password":
-              errMsg.value = "Incorrect password.";
+              errorMsg.value = "Incorrect password.";
               break;
             default:
-              errMsg.value = "Email or password was incorrect.";
+              errorMsg.value = "Email or password is incorrect.";
               break;
           }
         });
     };
 
-    return { email, password, errMsg, register };
+    // First import GoogleAuthProvider / signInWithPopup above to use GoogleAccount Oauth
+    // Create a provider using GoogleAuthProvider then call signInWithPopup using Auth and Provider which shows the popup to sign in
+    const signInWithGoogle = () => {
+      const provider = new GoogleAuthProvider();
+      signInWithPopup(getAuth(), provider)
+        .then(() => {
+          console.log();
+          router.push("/");
+        })
+        .catch((error) => {
+          //handle error
+        });
+    };
+
+    return { email, password, errorMsg, register, signInWithGoogle };
   },
 };
 </script>
@@ -102,13 +133,13 @@ export default {
 }
 
 form {
-  border: 1px solid #b8b8b8;
+  border: 1px solid #818182;
+  -webkit-box-shadow: 0px 0px 5px 0px #fff;
+  -moz-box-shadow: 0px 0px 5px 0px #fff;
+  box-shadow: 0px 0px 5px 0px #fff;
   padding: 40px;
-  margin: 0px 100px 100px 100px;
-}
-
-.border {
-  color: red;
+  margin: 0px 100px 50px 100px;
+  border-radius: 2px;
 }
 
 .form-container {
@@ -129,6 +160,7 @@ form {
   padding-left: 20px;
   width: 100%;
   border-radius: 4px;
+  margin-bottom: 15px;
 }
 
 .input:focus {
@@ -155,17 +187,22 @@ h2 {
   text-align: center;
   font-weight: 700;
 }
-
 .error {
-  display: block;
+  display: flex;
+  justify-content: center;
+  margin: auto;
+  width: 50%;
+  padding: 10px;
   color: #f44336;
   font-family: "D-DIN", Arial;
-  font-size: 12px;
-  margin-top: 4.9px;
-  padding-bottom: 5px;
-  padding-left: 20px;
+  font-size: 14px;
+  font-weight: 700;
+  /* border: 1px solid #f44336; */
+  /* border-radius: 10px; */
+  -webkit-box-shadow: 0px 0px 5px 0px #f44336;
+  -moz-box-shadow: 0px 0px 5px 0px #f44336;
+  box-shadow: 0px 0px 5px 0px #f44336;
 }
-
 .login-button {
   text-align: center;
   /* font: 14px "D-DIN", Arial; */
@@ -202,5 +239,23 @@ h2 {
 .register-button:hover {
   transition: 0.5s all ease;
   color: white;
+}
+
+.additional {
+  color: white;
+  width: 100%;
+  color: #818182;
+  margin-bottom: 10px;
+}
+
+.google-button {
+  background-color: white;
+  color: black;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border: 1px solid #818182;
+  width: 100%;
+  font-weight: 700;
+  border-radius: 4px;
 }
 </style>

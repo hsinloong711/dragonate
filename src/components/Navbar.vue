@@ -2,22 +2,20 @@
   <header>
     <a href="/" id="logo">Dragonate</a>
     <nav>
+      <!-- Router for Home / About / Shop -->
       <router-link class="router" :to="{ name: 'home' }">Home</router-link>
       <router-link class="router" :to="{ name: 'about' }">About</router-link>
-      <router-link class="shop" :to="{ name: 'shop' }">🛒</router-link>
+      <router-link class="router" :to="{ name: 'shop' }">Shop</router-link>
+      <router-link class="cart" :to="{ name: 'cart' }">🛒</router-link>
+
+      <!-- If account is logged in, show Username / Logout / Order History  -->
       <router-link v-if="!isLoggedIn" class="sign-in" :to="{ name: 'signin' }"
-        >Sign In</router-link
-      >
+        >Sign In
+      </router-link>
       <div class="flex" v-else>
-        <router-link class="router" :to="{ name: 'home' }"
-          >Order History</router-link
+        <router-link class="router" :to="{ name: 'create' }"
+          >Create</router-link
         >
-        <!-- <div class="dropdown-menu">
-          <button @click="showMenu">{{ name }}</button>
-          <div class="dropdown-content">
-            <button @click="handleSignOut" class="sign-out">Sign Out</button>
-          </div>
-        </div> -->
         <button @click="handleSignOut" class="sign-out">Logout</button>
         <a href="#" class="user-name">{{ name }} &nbsp; &nbsp;</a>
       </div>
@@ -32,6 +30,10 @@ import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 const isLoggedIn = ref(true);
 const name = ref("");
 
+// First import above
+// onMounted so that we have access to Firebase once our app is created
+// onAuthStateChanged which takes user as a parameter and toggle whether user is logged in or not.
+// Take username only by cutting away after @
 let auth;
 onMounted(() => {
   auth = getAuth();
@@ -45,10 +47,11 @@ onMounted(() => {
   });
 });
 
+// Firebase signOut(auth) is called here from Firebase/Auth to remove our current user.
 const handleSignOut = () => {
   signOut(auth).then(() => {
     alert("Sign out");
-    router.push("/shop");
+    // router.push("/shop");
   });
 };
 </script>
@@ -57,9 +60,9 @@ const handleSignOut = () => {
 .flex {
   display: inline;
 }
-
 .user-name {
   float: right;
+  color: #d0a85c;
 }
 
 .sign-out {
@@ -115,6 +118,10 @@ nav a {
   margin-left: 30px;
 }
 
+nav a.router-link-exact-active {
+  color: hsla(160, 100%, 37%, 1);
+}
+
 a,
 .green {
   text-decoration: none;
@@ -127,21 +134,13 @@ a,
   }
 } */
 
-/* nav a.router-link-exact-active {
-  color: white;
+nav a.router-link-exact-active {
+  color: hsla(160, 100%, 37%, 1);
 }
 
 nav a.router-link-exact-active:hover {
   background-color: black;
-}  */
-
-/* .fancy-link:active {
-  color: white;
 }
-
-.fancy-link-active:hover {
-  background-color: black;
-}  */
 
 .router {
   position: relative;
@@ -193,7 +192,7 @@ nav a.router-link-exact-active:hover {
   transform-origin: left;
 }
 
-.shop {
+.cart {
   font: 20px "D-Din", Arial;
   font-weight: 500;
   font-style: normal;

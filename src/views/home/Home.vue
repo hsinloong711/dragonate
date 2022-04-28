@@ -1,5 +1,7 @@
 <script>
 import HomeInput from "@/components/HomeInput.vue";
+// import HomeInfo from "@/components/HomeInfo.vue";
+
 export default {
   name: "Home",
   components: {

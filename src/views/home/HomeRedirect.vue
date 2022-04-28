@@ -14,7 +14,7 @@
       </div>
       <form>
         <h3>{{ headerInfo }}</h3>
-        <p class="address">{{ address }}</p>
+        <p id="address">{{ address }}</p>
         <InputName />
         <InputEmail />
         <InputPhone />
@@ -148,13 +148,11 @@ h3 {
   margin-top: 20px;
 }
 
-.address {
+#address {
   text-align: left;
   font: "D-DIN", Arial;
-  border: 2px solid #333;
   font-family: "D-DIN", Arial;
-  font-weight: 700;
-  border: 1px solid #333;
+  border: 1px solid white;
   transition: 0.4s;
   outline: none;
   padding: 15px;
@@ -163,6 +161,7 @@ h3 {
   margin-bottom: 20px;
   width: 581.5px;
   font: 15px "D-DIN", Arial;
+  font-weight: 700;
 }
 
 .items {

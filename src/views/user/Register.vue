@@ -1,7 +1,7 @@
 <template>
   <div class="background">
     <h2>First step to connect</h2>
-    <form @submit.prevent class="border">
+    <form @submit.prevent>
       <h3>Registration</h3>
       <div class="form-container">
         <input
@@ -10,15 +10,8 @@
           placeholder="Email (e.g. dragonate@outlook.com)"
           autocomplete="off"
           v-model="email"
-          @keyup="validateEmail"
-          @blur="validateEmail"
         />
       </div>
-      <div v-if="error.Email" class="error">
-        {{ error.Email }}
-      </div>
-      <div v-else>&nbsp;</div>
-
       <div class="form-container">
         <input
           type="password"
@@ -26,12 +19,8 @@
           placeholder="Password"
           autocomplete="off"
           v-model="password"
-          @keyup="validatePassword"
-          @blur="validatePassword"
         />
       </div>
-      <div v-if="error.Password" class="error">{{ error.Password }}</div>
-      <div v-else>&nbsp;</div>
 
       <div class="form-container">
         <button @click="register" class="login-button">Register</button>
@@ -52,33 +41,23 @@
           >.
         </p>
       </div>
-      <!-- <Recaptcha /> -->
     </form>
+    <div v-if="errorMsg">
+      <p class="error">{{ errorMsg }}</p>
+    </div>
   </div>
 </template>
 
 <script>
 import { ref } from "vue";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import useFormValidation from "@/modules/useFormValidation";
 import { useRouter } from "vue-router";
-// import Recaptcha from "@/components/Recaptcha.vue";
 export default {
-  // components: { Recaptcha },
   setup() {
     const email = ref("");
     const password = ref("");
-    const errMsg = ref("");
+    const errorMsg = ref("");
     const router = useRouter();
-    const { validateEmailField, validatePasswordField, error } =
-      useFormValidation();
-    const validateEmail = () => {
-      validateEmailField("Email", email.value);
-    };
-
-    const validatePassword = () => {
-      validatePasswordField("Password", password.value);
-    };
 
     const register = () => {
       const auth = getAuth();
@@ -92,11 +71,16 @@ export default {
           console.log(error.code);
           switch (error.code) {
             case "auth/email-already-in-use":
-              // errMsg.value = "Account already exists.";
-              alert("Account already exists");
+              errorMsg.value = "Account already exists.";
+              break;
+            case "auth/invalid-email":
+              errorMsg.value = "Invalid e-mail address or password.";
+              break;
+            case "auth/weak-password":
+              errorMsg.value = "The password must have at least 6 characters.";
+              break;
             default:
-              // alert("Input cannot be empty.");
-              // errMsg.value = "";
+              errorMsg.value = "Input cannot be empty.";
               break;
           }
         });
@@ -104,10 +88,7 @@ export default {
     return {
       email,
       password,
-      validateEmail,
-      validatePassword,
-      error,
-      errMsg,
+      errorMsg,
       register,
     };
   },
@@ -121,13 +102,13 @@ export default {
 }
 
 form {
-  border: 1px solid #b8b8b8;
+  border: 1px solid #818182;
+  -webkit-box-shadow: 0px 0px 5px 0px #fff;
+  -moz-box-shadow: 0px 0px 5px 0px #fff;
+  box-shadow: 0px 0px 5px 0px #fff;
   padding: 40px;
-  margin: 0px 100px 100px 100px;
-}
-
-.border {
-  color: red;
+  margin: 0px 100px 50px 100px;
+  border-radius: 2px;
 }
 
 .form-container {
@@ -138,7 +119,6 @@ form {
 .input {
   text-align: left;
   font-family: "D-DIN", Arial;
-  /* font: 14px "D-DIN", Arial; */
   border: 1px solid #818182;
   background-color: #262626;
   color: white;
@@ -147,6 +127,7 @@ form {
   padding: 15px;
   padding-left: 20px;
   width: 100%;
+  margin-bottom: 15px;
   border-radius: 4px;
 }
 
@@ -176,13 +157,22 @@ h2 {
 }
 
 .error {
-  display: block;
+  display: flex;
+  justify-content: center;
+  margin: auto;
+  width: 50%;
+  padding: 10px;
   color: #f44336;
   font-family: "D-DIN", Arial;
-  font-size: 12px;
-  padding-bottom: 4.9px;
-  padding-left: 20px;
+  font-size: 14px;
+  font-weight: 700;
+  /* border: 1px solid #f44336; */
+  /* border-radius: 10px; */
+  -webkit-box-shadow: 0px 0px 5px 0px #f44336;
+  -moz-box-shadow: 0px 0px 5px 0px #f44336;
+  box-shadow: 0px 0px 5px 0px #f44336;
 }
+
 .login-button {
   text-align: center;
   /* font: 14px "D-DIN", Arial; */
@@ -195,7 +185,12 @@ h2 {
   padding-top: 15px;
   padding-bottom: 15px;
   width: 100%;
+  cursor: pointer;
   border-radius: 4px;
+}
+
+.button-container {
+  display: flex;
 }
 
 .register {
@@ -215,5 +210,6 @@ h2 {
 .register-button:hover {
   transition: 0.5s all ease;
   color: white;
+  cursor: pointer;
 }
 </style>

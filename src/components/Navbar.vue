@@ -8,16 +8,18 @@
       <router-link class="router" :to="{ name: 'shop' }">Shop</router-link>
       <router-link class="cart" :to="{ name: 'cart' }">🛒</router-link>
 
-      <!-- If account is logged in, show Username / Logout / Order History  -->
+      <!-- Not logged in -->
       <router-link v-if="!isLoggedIn" class="sign-in" :to="{ name: 'signin' }"
         >Sign In
       </router-link>
+      
+      <!--  Logged in -->
       <div class="flex" v-else>
         <router-link class="router" :to="{ name: 'create' }"
           >Create</router-link
         >
         <button @click="handleSignOut" class="sign-out">Logout</button>
-        <a href="#" class="user-name">{{ name }} &nbsp; &nbsp;</a>
+        <router-link class="user-name" :to="{ name: 'user'}">{{ name }} &nbsp; &nbsp;</router-link>
       </div>
     </nav>
   </header>
@@ -29,6 +31,7 @@ import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 
 const isLoggedIn = ref(true);
 const name = ref("");
+const uid = ref("");
 
 // First import above
 // onMounted so that we have access to Firebase once our app is created
@@ -41,6 +44,7 @@ onMounted(() => {
     if (user) {
       isLoggedIn.value = true;
       name.value = user.email.split("@")[0];
+      uid.value = user.uid;
     } else {
       isLoggedIn.value = false;
     }
@@ -62,7 +66,6 @@ const handleSignOut = () => {
 }
 .user-name {
   float: right;
-  color: #d0a85c;
 }
 
 .sign-out {
@@ -89,7 +92,6 @@ header {
   display: flex;
   padding-top: 20px;
   width: 100%;
-  /* border-bottom: 1px solid #1d1d1d; */
   transition: 0.5 ease all;
 }
 

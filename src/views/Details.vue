@@ -1,5 +1,5 @@
 <template>
-  <div v-if="error">{{ error }}</div>
+  <!-- <div v-if="error">{{ error }}</div> -->
 
   <div v-if="product" class="grid">
     <div class="product-image">
@@ -7,18 +7,17 @@
         <div
           class="image-main"
           style="
-            background-image: url('https://source.unsplash.com/dBwadhWa-lI');
+            background-image: url('https://source.unsplash.com/KikhsHzIO9o');
           "
         ></div>
       </div>
     </div>
 
-    <div class="product-details">
-      <h1>{{ product.name }}</h1>
+    <div class="product-detail">
+      <h2>{{ product.name }}</h2>
 
       <div>
-        <!-- <h3>Price</h3> -->
-        <p class="price">RM {{ product.price }}</p>
+        <h2 class="price">RM {{ product.price }}</h2>
       </div>
 
       <div class="description">
@@ -31,43 +30,64 @@
         <p>{{ product.description }}</p>
       </div>
 
-      <button @click="handleDelete" v-if="ownership">Delete this</button>
       <!-- <button class="buy--btn">ADD TO CART</button> -->
     </div>
   </div>
-  <p>{{ product.user }} | {{ product.timestamp }} |{{ product.uid }}</p>
+  <div class="grid1">
+    <div class="left-grid">
+      <!-- <p class="user">{{ product.loggedInUser }}</p> -->
+      <!-- <router-link :to="{ name: 'user', params: { id: uid }}">{{ product.user }}</router-link> -->
+    </div>
+
+    <div class="right-grid">
+      <button @click="handleSubmit">Add To Cart</button>
+      <button @click="handleDelete">Delete this</button>
+    </div>
+  </div>
 </template>
 
 <script>
-import getProduct from "../composables/getProduct";
-import Spinner from "../components/Spinner.vue";
+// import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { collection, doc, getDocs, getDoc } from "firebase/firestore";
+import { db } from "../firebase/config";
+import getCollection from "../composables/getCollection";
 import getUser from "../composables/getUser";
-
-import { computed } from "vue";
+import { ref } from "vue";
 
 export default {
-  components: { Spinner },
-  props: ["id"],
-  setup(props) {
-    const { product, error, load } = getProduct(props.id);
-    const { user, uid } = getUser();
+  components: {},
+  setup() {
+    // const router = useRouter();
+    const { seller, uid } = getUser();
+    const { documents: products } = getCollection("products");
 
-    const ownership = computed(() => {
-      return product.value && uid.value == product.value.uid;
-    });
+    const name = ref("");
+    const price = ref("");
+    const stock = ref("");
+    const description = ref("");
 
-    // const handleDelete = async () => {
-    //   await deleteDoc();
-    // };
+    const product = async (id) => {
+      const docRef = collection(db, c).doc(id).get();
 
-    load();
+      await getDoc(docRef, {
+        name: name.value,
+        description: description.value,
+        stock: stock.value,
+        price: price.value,
+        seller: seller.value,
+        uid: uid.value,
+      });
+    };
 
     return {
-      product,
-      error,
-      user,
+      name,
+      price,
+      stock,
+      description,
+      seller,
       uid,
-      ownership,
+      product,
+      products,
     };
   },
 };
@@ -86,11 +106,12 @@ img {
 .grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(240px, 1fr));
-  grid-auto-rows: 560px;
+  grid-auto-rows: 450px;
   border-radius: 4px;
   padding: 10px;
-  padding-top: 10px;
   margin-top: 30px;
+  margin-left: 100px;
+  margin-right: 220px;
 }
 
 .image-container {
@@ -119,8 +140,11 @@ img {
   background-repeat: no-repeat;
 }
 
+/* .product-details {
+  margin-right: 200px;
+} */
+
 .description {
-  display: block;
   margin-top: 30px;
   margin-bottom: 25px;
   /* margin-bottom: 36px; */
@@ -128,35 +152,56 @@ img {
 
 p {
   font: "D-din";
-  font-weight: 400;
+  /* font-weight: 700; */
   font-size: 16px;
   width: 95%;
+  /* font-weight: 700; */
 }
 
-h1 {
-  /* margin-bottom: 0.1em;
-  font-size: 1.5em; */
+h2 {
+  display: block;
+  margin-bottom: 0.1em;
   text-align: left;
-  font-weight: 700;
-  background: -webkit-linear-gradient(white, #fff);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-size: 24px;
   font: "D-DIN", Arial;
+  color: #d0a85c;
+  font-weight: 700;
 }
 
 h3 {
-  background: -webkit-linear-gradient(white, #fff);
+  background: -webkit-linear-gradient(#b8b8b8, #b8b8b8);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  font: "D-DIN", Arial;
+  font-weight: 700;
+  /* color: #b8b8b8;
+  font-weight: 700; */
 }
 
 .price {
+  padding-top: 10px;
+  /* font-size: 40px; */
+}
+
+.grid1 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(10px, 1fr));
+  grid-auto-rows: 100px;
+  border-radius: 4px;
+  margin-top: 10px;
+  margin-left: 100px;
+  margin-right: 220px;
+}
+
+.user {
+  margin-left: 120px;
+  border: 1px dotted hsla(160, 100%, 37%, 1);
+  height: 26%;
+  width: 20%;
+  text-align: center;
   color: hsla(160, 100%, 37%, 1);
-  font-size: 33px;
-  /* margin-top: 16px; */
   font-weight: 700;
+  font-size: 14.5px;
+  overflow: hidden;
 }
 </style>

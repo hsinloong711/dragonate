@@ -3,8 +3,6 @@ import { RouterLink, RouterView } from "vue-router";
 import Navbar from "./components/Navbar.vue";
 
 export default {
-  props: ["products"],
-
   components: { Navbar },
 };
 </script>
@@ -16,19 +14,14 @@ export default {
       <!-- <RouterLink to="/">Home</RouterLink> -->
       <!-- <RouterLink to="homeredirect"></RouterLink> -->
     </nav>
-    <!-- Child component passed props by parent Create.vue -->
-    <div class="product-list">
-      <div v-for="product in products" :key="product.id">
-        <p>{{ product.description }}</p>
-      </div>
-    </div>
-    <div class="container">
+    <router-view></router-view>
+    <!-- <div class="container">
       <router-view v-slot="{ Component }">
         <transition name="fade" mode="out-in">
           <component :is="Component" :key="$route.path"></component>
         </transition>
       </router-view>
-    </div>
+    </div> -->
   </div>
 
   <!-- <Footerbar /> for both home and about -->

@@ -1,7 +1,7 @@
 <template>
   <div class="background">
     <h2>Sale</h2>
-    <form @submit.prevent="handleSubmit">
+    <form @submit.prevent>
       <h3>Product</h3>
       <div class="form-container">
         <label class="required">Name</label>
@@ -10,6 +10,8 @@
           class="input"
           autocomplete="off"
           v-model="name"
+          textarea
+          maxlength="65"
           required
         />
       </div>
@@ -26,12 +28,15 @@
       </div>
 
       <div class="form-container">
+        <span class="description">{{ description.length }} / 750</span>
         <label class="required">Description</label>
         <input
           type="text"
           class="input"
           autocomplete="off"
           v-model="description"
+          textarea
+          maxlength="750"
           required
         />
       </div>
@@ -55,7 +60,7 @@
       </div>
 
       <div class="form-container">
-        <button class="login-button">Create</button>
+        <button @click="handleSubmit" class="login-button">Create</button>
       </div>
     </form>
     <div v-if="error">
@@ -64,46 +69,40 @@
   </div>
 </template>
 
-<script setup>
+<script>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import getUser from "../composables/getUser";
 
-const name = ref("");
-const stock = ref("");
-const description = ref("");
-const price = ref("");
-// const currentDate = new Date();
-// const timestamp = currentDate.getTime()
-const today = new Date();
-const date =
-  today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
-const time =
-  today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-const dateTime = date + "" + time;
+import { db } from "../firebase/config";
+import { addDoc, collection } from "firebase/firestore";
 
-const router = useRouter();
+export default {
+  setup() {
+    const router = useRouter();
+    const { seller, uid } = getUser();
 
-const { user, uid } = getUser();
+    const name = ref("");
+    const description = ref("");
+    const stock = ref("");
+    const price = ref("");
 
-const handleSubmit = async () => {
-  const product = {
-    name: name.value,
-    stock: stock.value,
-    description: description.value,
-    price: price.value,
-    uid: uid.value,
-    user: user.value,
-    timestamp: dateTime,
-  };
+    const handleSubmit = async () => {
+      const colRef = collection(db, "products"); // This add third arguemnt , doc.id  getDoc(colRef)
 
-  await fetch("http://localhost:3000/products", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(product),
-  });
+      await addDoc(colRef, {
+        name: name.value,
+        description: description.value,
+        stock: stock.value,
+        price: price.value,
+        seller: seller.value,
+        uid: uid.value,
+      });
+      router.push({ name: "shop" });
+    };
 
-  router.push({ name: "shop" });
+    return { handleSubmit, name, description, stock, price };
+  },
 };
 </script>
 

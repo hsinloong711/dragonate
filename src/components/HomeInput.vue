@@ -105,7 +105,7 @@ input::placeholder {
 
 .order-button:hover {
   cursor: pointer;
-  background-color: #51596c;
+  /* background-color: #fff; */
 }
 
 /* Disable autofill highlighting */

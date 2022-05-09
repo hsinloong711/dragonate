@@ -50,6 +50,7 @@
 import InputName from "@/components/InputName.vue";
 import InputEmail from "@/components/InputEmail.vue";
 import InputPhone from "@/components/InputPhone.vue";
+import { onMounted } from "vue";
 export default {
   components: { InputName, InputEmail, InputPhone },
   props: {

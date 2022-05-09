@@ -8,6 +8,7 @@ import Register from "../views/user/Register.vue";
 import Cart from "../views/Cart.vue";
 import Shop from "../views/Shop.vue";
 import Details from "../views/Details.vue";
+import User from "../views/user/User.vue";
 import Create from "../views/Create.vue";
 
 const router = createRouter({
@@ -62,7 +63,11 @@ const router = createRouter({
       path: "/products/:id",
       name: "details",
       component: Details,
-      props: true,
+    },
+    {
+      path: "/user",
+      name: "user",
+      component: User,
     },
     {
       path: "/create",

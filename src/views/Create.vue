@@ -1,15 +1,15 @@
 <template>
   <div class="background">
-    <h2>Sale</h2>
-    <form @submit.prevent>
-      <h3>Product</h3>
+    <h2>Upload Image</h2>
+    <form @submit.prevent="handleSubmit">
+      <h3>Photo</h3>
       <div class="form-container">
-        <label class="required">Name</label>
+        <label class="required">Title</label>
         <input
           type="text"
           class="input"
           autocomplete="off"
-          v-model="name"
+          v-model="title"
           textarea
           maxlength="65"
           required
@@ -17,39 +17,29 @@
       </div>
 
       <div class="form-container">
-        <label class="required">Stock</label>
-        <input
-          type="number"
-          class="input"
-          autocomplete="off"
-          v-model="stock"
-          required
-        />
-      </div>
-
-      <div class="form-container">
-        <span class="description">{{ description.length }} / 750</span>
-        <label class="required">Description</label>
+        <div class="flexbox">
+          <label class="required">Description</label>
+          <span class="description">{{ description.length }} / 100</span>
+        </div>
         <input
           type="text"
           class="input"
           autocomplete="off"
           v-model="description"
           textarea
-          maxlength="750"
+          maxlength="100"
           required
         />
       </div>
 
       <div class="form-container">
-        <label class="required">Price ( RM )</label>
+        <label class="required">Location</label>
         <input
-          type="number"
+          type="text"
           step="any"
-          inputmode="”numeric"
           class="input"
           autocomplete="off"
-          v-model="price"
+          v-model="location"
           required
         />
       </div>
@@ -60,12 +50,9 @@
       </div>
 
       <div class="form-container">
-        <button @click="handleSubmit" class="login-button">Create</button>
+        <button class="login-button">Create</button>
       </div>
     </form>
-    <div v-if="error">
-      <p class="error">{{ error }}</p>
-    </div>
   </div>
 </template>
 
@@ -73,35 +60,51 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import getUser from "../composables/getUser";
-
 import { db } from "../firebase/config";
 import { addDoc, collection } from "firebase/firestore";
 
 export default {
   setup() {
     const router = useRouter();
-    const { seller, uid } = getUser();
 
-    const name = ref("");
+    const { name, uid } = getUser();
+    const title = ref("");
     const description = ref("");
-    const stock = ref("");
-    const price = ref("");
+    const location = ref("");
+    const today = new Date();
+    let date =
+      today.getFullYear() +
+      "-" +
+      (today.getMonth() + 1) +
+      "-" +
+      today.getDate();
+    let time = today.getHours() + ":" + today.getMinutes();
+    const dateTime = date + " " + time;
 
     const handleSubmit = async () => {
-      const colRef = collection(db, "products"); // This add third arguemnt , doc.id  getDoc(colRef)
+      const colRef = collection(db, "photos");
 
       await addDoc(colRef, {
-        name: name.value,
+        title: title.value,
         description: description.value,
-        stock: stock.value,
-        price: price.value,
-        seller: seller.value,
+        location: location.value,
+        name: name.value,
         uid: uid.value,
+        dateTime: dateTime,
       });
+      console.log(name.value);
       router.push({ name: "shop" });
     };
 
-    return { handleSubmit, name, description, stock, price };
+    return {
+      handleSubmit,
+      title,
+      description,
+      location,
+      name,
+      uid,
+      dateTime,
+    };
   },
 };
 </script>
@@ -248,5 +251,15 @@ h2 {
   width: 100%;
   color: #818182;
   margin-bottom: 10px;
+}
+
+.flexbox {
+  display: flex;
+  justify-content: space-between;
+}
+
+.description {
+  color: #b8b8b8;
+  font-size: 13px;
 }
 </style>

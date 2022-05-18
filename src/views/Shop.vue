@@ -1,59 +1,50 @@
 <template>
   <div class="background">
-    <h2>Product List</h2>
+    <h2>Photo Collection</h2>
 
-    <div class="product-list">
-      <div class="product-card" v-for="product in products" :key="product.id">
-        <router-link :to="{ name: 'details', params: { id: product.id } }">
+    <div class="photo-list">
+      <div class="photo-card" v-for="photo in photos" :key="photo.id">
+        <router-link :to="{ name: 'details', params: { id: photo.id } }">
           <div
-            class="product-image"
+            class="photo-image"
             style="
-              background-image: url('https://source.unsplash.com/KikhsHzIO9o');
+              background-image: url('https://blog.logrocket.com/wp-content/uploads/2020/04/Vue-3.png');
             "
           ></div>
-          <div class="product-detail">
-            <h4>{{ product.name.substring(0, 35) }}</h4>
+          <div class="photo-detail">
+            <h4>{{ photo.title.substring(0, 35) }}</h4>
             <p class="snippet">
-              {{ product.description.substring(0, 130) }} . . .
+              {{ photo.description.substring(0, 100) }}
             </p>
           </div>
         </router-link>
         <div class="flexbox">
-          <p class="price">RM {{ product.price }}</p>
-          <p class="stock">Stock: {{ product.stock }}</p>
+          <p class="seller">{{ photo.name }}</p>
+          <p class="dateTime">{{ photo.dateTime }}</p>
         </div>
       </div>
     </div>
-    <!-- 
-    Display products and pass products props to ProductList.vue 
-    <div class="border">
-      <div v-if="products.length">
-        <ProductList :products="products" />
-      </div>
-
-    Load spinner until data is fetched
-      <div v-else>
-        <Spinner />
-      </div> -->
-
-    <div v-if="error" class="error">{{ error }}</div>
   </div>
 </template>
 
 <script>
+import { db } from "@/firebase/config";
+import getUser from "../composables/getUser";
 import getCollection from "../composables/getCollection";
+import { computed, ref } from "vue";
 export default {
   name: "Shop",
   setup() {
-    const { documents: products } = getCollection("products");
+    const { name, uid } = getUser();
+    const { documents: photos } = getCollection("photos");
 
-    return { products };
+    return { photos, name, uid };
   },
 };
 </script>
 
 <style scoped>
-.product-list {
+.photo-list {
   display: grid;
   gap: 2rem;
   grid-template-columns: repeat(3, minmax(240px, 1fr));
@@ -63,7 +54,7 @@ export default {
   /* border: 1px solid green; */
 }
 
-.product-card {
+.photo-card {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   border: 1px solid #818182;
@@ -76,9 +67,10 @@ export default {
   width: 100%;
   height: 90%;
   overflow: hidden;
+  /* background-image: linear-gradient(180deg, black 10%, #13120e 75%); */
 }
 
-.product-image {
+.photo-image {
   height: 300px;
   background-color: white;
   background: white;
@@ -104,22 +96,24 @@ h2 {
 }
 
 h4 {
-  font-weight: 700;
+  /* font-weight: 400; */
   font-size: 19px;
-  color: #d0a85c;
+  color: white;
   margin-top: 0px;
 }
 
 .snippet {
   width: 100%;
   /* line-height: 20px; */
-  background: -webkit-linear-gradient(#b8b8b8, #b8b8b8);
+  /* background: -webkit-linear-gradient(#b8b8b8, #b8b8b8);
   background-clip: text;
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-weight: 700;
+  -webkit-text-fill-color: transparent; */
+  /* font-weight: 7 */
   font: "D-DIN", Arial;
   overflow: hidden;
+  /* color: #b8b8b8; */
+  /* font-weight: 700; */
 }
 
 p {
@@ -138,15 +132,16 @@ p {
   justify-content: space-between;
 }
 
-.stock {
+.dateTime {
   font-weight: 400;
   color: white;
   align-self: flex-end;
+  color: #b8b8b8;
 }
 
-.price {
+.seller {
   display: block;
-  color: #d0a85c;
+  color: #d9fcf2;
   font-weight: 700;
   overflow: hidden;
   align-self: flex-end;
@@ -159,7 +154,6 @@ a {
 
 p {
   align-self: flex-end;
-  /* margin: auto 0; */
 }
 
 .error {

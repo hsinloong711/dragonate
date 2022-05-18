@@ -1,105 +1,138 @@
 <template>
-  <div class="article">
-    <h2>My Project</h2>
-    <div class="image">
-      <img
-        src="https://source.unsplash.com/-7BMThljOPg"
-        alt=""
-        height="550"
-        width="703"
-      />
+  <div class="background">
+    <h2>Your Purchase</h2>
+
+    <div class="photo-details">
+      <p>Package</p>
+      <p>Payment</p>
+      <p>Order ID</p>
+      <p>Time</p>
     </div>
-    <div class="content">
-      <div class="fr" lang="fr">
-        <h3>Mission</h3>
-        <p>
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Non ex
-          ratione, corporis adipisci dolores veniam illum veritatis, quidem
-          tempore fuga quod magni saepe amet nesciunt. Facere facilis obcaecati
-          optio quo dolor in architecto laborum maiores incidunt animi dicta
-          assumenda, veritatis provident doloremque! Mollitia doloremque,
-          veritatis nisi molestiae placeat, eius magnam unde sit aspernatur
-          dolor esse cupiditate aperiam ullam rerum debitis! Optio aliquam
-          commodi labore sequi, neque aperiam quaerat dolorum dolor?
-        </p>
-      </div>
-      <div class="en" lang="en">
-        <h3>Vision</h3>
-        <p>
-          Tortor eu vestibulum elit lacinia ac sed pharetra odio egestas,
-          placerat dolor sollicitudin dictum natoque lorem est etiam tristique
-          convallis, at inceptos nisl tempus torquent neque nunc arcu.
-        </p>
+
+    <div v-if="purchasedUsers">
+      <div
+        class="photo-list"
+        v-for="purchasedUser in purchasedUsers"
+        :key="purchasedUser.id"
+      >
+        <div class="photo-detail">
+          <img
+            src="https://cdn.arstechnica.net/wp-content/uploads/2021/11/starlink-dish-and-router.jpg"
+            class="photo"
+            alt="Vue 3 Photo"
+            width="100"
+            height="100"
+          />
+          <p class="detail">RM 400</p>
+          <p class="detail1">{{ purchasedUser.id }}</p>
+          <p class="detail2">{{ purchasedUser.dateTime }}</p>
+        </div>
       </div>
     </div>
+
+    <!-- <div v-else>Loading</div> -->
   </div>
 </template>
 
 <script>
-export default {};
+import getUser from "../composables/getUser";
+import getCollection from "../composables/getCollection";
+
+export default {
+  setup() {
+    const { name, uid } = getUser();
+    const { documents: purchasedUsers } = getCollection("purchasedUsers", [
+      "uid",
+      "==",
+      uid.value,
+    ]);
+
+    return { name, uid, purchasedUsers };
+  },
+};
 </script>
 
 <style scoped>
-* {
-  box-sizing: border-box;
+.photo-list {
+  margin: 20px;
+  padding: 20px;
+  padding-top: 0px;
+  border-bottom: 1px solid #818182;
+  /* border-top: 1px solid #b8b8b8; */
+  margin-right: 300px;
+  margin-left: 300px;
 }
-.image {
+
+.photo-details {
+  margin-left: 300px;
+  margin-right: 300px;
   display: flex;
-  justify-content: center;
-  /* text-align: center; */
-  margin: 50px;
+  justify-content: space-around;
+  font-weight: 700;
+  color: #b8b8b8;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #818182;
 }
-body {
-  background: black;
-  margin: 2em;
+
+.photo-detail {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: 1fr;
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  /* padding-left: 15px; */
+  /* margin-left: 300px;
+  margin-right: 300px; */
+}
+
+.detail {
+  padding-left: 3px;
+}
+
+.detail1 {
+  padding-left: 70px;
+}
+
+.detail2 {
+  padding-left: 70px;
+}
+
+.photo-card {
+  display: flex;
+  justify-content: space-between;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.photo-image {
+  height: 100px;
+  width: 100px;
+  margin-right: 1000px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.photo {
+  margin: auto;
+}
+
+p {
+  margin: auto;
 }
 
 h2 {
   color: white;
-  margin: 50px;
-  margin-top: 31px;
-  font-size: 27px;
+  background: -webkit-linear-gradient(white, #fff);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font: 30px/100px "D-DIN", Arial;
   text-align: center;
-  font: "D-DIN", Arial;
   font-weight: 700;
 }
 
-h3 {
+a {
   color: white;
-  text-transform: uppercase;
-  /* font-size: 14px; */
-  font-weight: 600;
-  margin-bottom: 1em;
-  /* font-size: 18px; */
-}
-
-p {
-  color: white;
-  font: "D-din";
-  font-size: 14px;
-  text-align: justify;
-  font-size: 15px;
-}
-
-.article {
-  color: black;
-  height: 825px;
-}
-
-/* .title {
-  text-align: center;
-  max-width: 200px;
-  margin: 0 auto 4em;
-} */
-
-.content {
-  background: black;
-  height: 1000px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  grid-gap: 2vw;
-  /* padding-top: 20px; */
-  padding-left: 300px;
-  padding-right: 300px;
+  text-decoration: none;
 }
 </style>

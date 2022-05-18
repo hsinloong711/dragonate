@@ -1,0 +1,22 @@
+{
+  // "extends": "@vue/tsconfig/tsconfig.web.json",
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
+  "compilerOptions": {
+    "outDir": "build",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "allowJs": true,
+    "jsx": "preserve"
+  },
+  "vueCompilerOptions": {
+    "experimentalShamefullySupportOptionsApi": true
+  },
+
+  "references": [
+    {
+      "path": "./tsconfig.vite-config.json"
+    }
+  ]
+}

@@ -31,11 +31,12 @@
 
 <script>
 import HomeRedirect from "../views/home/HomeRedirect.vue";
+import InputName from "@/components/InputName.vue";
 import { ref } from "vue";
 
 export default {
   name: "Home",
-  components: { HomeRedirect },
+  components: { HomeRedirect, InputName },
 
   setup() {
     const address = ref("");

@@ -1,7 +1,7 @@
 <template>
   <div class="background">
     <h2>First step to connect</h2>
-    <form @submit.prevent>
+    <form @submit.prevent="register">
       <h3>Registration</h3>
       <div class="form-container">
         <input
@@ -23,7 +23,7 @@
       </div>
 
       <div class="form-container">
-        <button @click="register" class="login-button">Register</button>
+        <button class="login-button">Register</button>
       </div>
       <div class="button-container">
         <p class="register">
@@ -52,11 +52,14 @@
 import { ref } from "vue";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "vue-router";
+import { db } from "@/firebase/config";
+import { setDoc, collection } from "firebase/firestore";
 export default {
   setup() {
     const email = ref("");
     const password = ref("");
     const errorMsg = ref("");
+    const freeTrial = ref(true);
     const router = useRouter();
 
     const register = () => {
@@ -85,6 +88,16 @@ export default {
           }
         });
     };
+
+    // const handleSubmit = async () => {
+    //   const colRef = collection(db, "users");
+
+    //   await setDoc(colRef, {
+    //     email: email.value,
+    //     freeTrial: freeTrial.value,
+    //   });
+    // };
+
     return {
       email,
       password,

@@ -6,20 +6,20 @@
       <router-link class="router" :to="{ name: 'home' }">Home</router-link>
       <router-link class="router" :to="{ name: 'about' }">About</router-link>
       <router-link class="router" :to="{ name: 'shop' }">Shop</router-link>
-      <router-link class="cart" :to="{ name: 'cart' }">🛒</router-link>
+      <router-link class="router" :to="{ name: 'create' }">Create</router-link>
+      <router-link class="cart" :to="{ name: 'cart' }">📸</router-link>
 
       <!-- Not logged in -->
       <router-link v-if="!isLoggedIn" class="sign-in" :to="{ name: 'signin' }"
         >Sign In
       </router-link>
-      
+
       <!--  Logged in -->
       <div class="flex" v-else>
-        <router-link class="router" :to="{ name: 'create' }"
-          >Create</router-link
-        >
         <button @click="handleSignOut" class="sign-out">Logout</button>
-        <router-link class="user-name" :to="{ name: 'user'}">{{ name }} &nbsp; &nbsp;</router-link>
+        <router-link class="user-name" :to="{ name: 'user' }"
+          >{{ name }} &nbsp; &nbsp;</router-link
+        >
       </div>
     </nav>
   </header>
@@ -28,7 +28,9 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const isLoggedIn = ref(true);
 const name = ref("");
 const uid = ref("");
@@ -55,7 +57,7 @@ onMounted(() => {
 const handleSignOut = () => {
   signOut(auth).then(() => {
     alert("Sign out");
-    // router.push("/shop");
+    router.push("/");
   });
 };
 </script>
@@ -200,8 +202,8 @@ nav a.router-link-exact-active:hover {
   font-style: normal;
   position: relative;
   float: right;
-  border-style: inset;
-  border: 2px inset hsla(160, 100%, 37%, 1);
+  /* border-style: inset; */
+  border: 2px inset #b8b8b8;
   padding: 0 1rem;
   margin-left: 20px;
   margin-right: 20px;

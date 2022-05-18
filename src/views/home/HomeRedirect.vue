@@ -6,67 +6,181 @@
       <div id="stars3"></div>
     </section>
   </div>
+  <form @submit.prevent="handleSubmit">
+    <div class="split right">
+      <div class="centered">
+        <div id="title">
+          <h2>Order D-Nate</h2>
+        </div>
+        <form>
+          <h3>Item Information</h3>
+          <div class="items">
+            <p class="item">Router</p>
+            <p class="item">RM 100</p>
+          </div>
+          <div class="items">
+            <p class="item">D-Nate 1000</p>
+            <p class="item">RM 100</p>
+          </div>
+          <div class="items">
+            <p class="item">Superfast Broadband VersionX 2000</p>
+            <p class="item">RM 100</p>
+          </div>
+          <div class="items">
+            <p class="item">Service / Monthly</p>
+            <p class="item">RM 100</p>
+          </div>
 
-  <div class="split right">
-    <div class="centered">
-      <div id="title">
-        <h2>{{ header }}</h2>
+          <div class="total">
+            <h2>TOTAL</h2>
+            <h2>RM 400</h2>
+          </div>
+
+          <h3>Service Information</h3>
+          <form @submit.prevent="handleSubmit">
+            <p id="address">{{ address }} &nbsp;</p>
+
+            <div class="form-container">
+              <input
+                type="text"
+                class="input"
+                placeholder="Name"
+                autocomplete="off"
+                v-model="inputName"
+                @keyup="validateName"
+                @blur="validateName"
+                required
+              />
+              <div class="error" v-if="error.Name">
+                {{ error.Name }}
+              </div>
+              <div v-else>&nbsp;</div>
+            </div>
+
+            <div class="form-container">
+              <input
+                type="text"
+                class="input"
+                placeholder="Email (e.g. dragonate@outlook.com)"
+                autocomplete="off"
+                v-model="inputEmail"
+                @keyup="validateEmail"
+                @blur="validateEmail"
+                required
+              />
+              <div class="error" v-if="error.Email">
+                {{ error.Email }}
+              </div>
+              <div v-else>&nbsp;</div>
+            </div>
+
+            <div class="form-container">
+              <input
+                type="text"
+                class="input"
+                placeholder="Phone number"
+                autocomplete="off"
+                v-model="inputPhone"
+                @keyup="validatePhone"
+                @blur="validatePhone"
+                required
+              />
+              <div class="error" v-if="error.Phone">
+                {{ error.Phone }}
+              </div>
+              <div v-else>&nbsp;</div>
+              <button :disabled="inputName && inputEmail && inputPhone === ''">
+                Test Purchase
+              </button>
+              <a
+                href="https://checkout.stripe.com/pay/cs_test_a1FIfM6L1XOIRGxLZztm26UZUQL3WhMeIadKv4LUZaeph4bChFVlW2A35R#fidkdWxOYHwnPyd1blpxYHZxWjA0STVNXTdCUFBDYEI1f1xtTDJrYzJVc1dRcTQ1dlxPVk1RVTJrMFxCcmFocXFnPEJ%2FZ29dTTM1MFJgMEBgTTdRdkBkYjdvVEJxZExWVU5yNzRMN3BWRnRfNTVMYHRLY2g0YScpJ3VpbGtuQH11anZgYUxhJz8ncWB2cVpgU2Q9RGdgTHdmYEgwcEA1NTUneCUl"
+                >Buy with Stripe</a
+              >
+            </div>
+          </form>
+        </form>
       </div>
-      <form>
-        <h3>{{ headerInfo }}</h3>
-        <p id="address">{{ address }}</p>
-        <InputName />
-        <InputEmail />
-        <InputPhone />
-
-        <h3>{{ headerInfo1 }}</h3>
-        <div class="items">
-          <p class="item">{{ list.name }}</p>
-          <p class="item">{{ list.price }}</p>
-        </div>
-        <div class="items">
-          <p class="item">{{ list1.name }}</p>
-          <p class="item">{{ list1.price }}</p>
-        </div>
-        <div class="items">
-          <p class="item">{{ list2.name }}</p>
-          <p class="item">{{ list2.price }}</p>
-        </div>
-        <div class="items">
-          <p class="item">{{ list3.name }}</p>
-          <p class="item">{{ list3.price }}</p>
-        </div>
-
-        <div class="total">
-          <h2>TOTAL</h2>
-          <h2>RM 400</h2>
-        </div>
-      </form>
     </div>
-  </div>
+  </form>
 </template>
 
 <script>
 import InputName from "@/components/InputName.vue";
-import InputEmail from "@/components/InputEmail.vue";
-import InputPhone from "@/components/InputPhone.vue";
-import { onMounted } from "vue";
+import { ref } from "vue";
+import useFormValidation from "@/modules/useFormValidation";
+import getUser from "@/composables/getUser";
+import { db } from "@/firebase/config";
+import { addDoc, collection } from "firebase/firestore";
+import { useRouter } from "vue-router";
 export default {
-  components: { InputName, InputEmail, InputPhone },
+  components: { InputName },
   props: {
     address: {
       type: String,
     },
   },
   setup() {
-    let header = "Order D-Nate";
-    let headerInfo = "Service Information";
-    let headerInfo1 = "Item Information";
-    let list = { name: "Router", price: "RM 100" };
-    let list1 = { name: "D-Nate 1000", price: "RM 100" };
-    let list2 = { name: "Superfast Broadband VersionX 2000", price: "RM 100" };
-    let list3 = { name: "Service / Monthly", price: "RM 100" };
-    return { header, headerInfo, headerInfo1, list, list1, list2, list3 };
+    const router = useRouter();
+    const { name, uid } = getUser();
+
+    let inputName = ref("");
+    let inputEmail = ref("");
+    let inputPhone = ref("");
+    const { validateNameField, validateEmailField, validatePhoneField, error } =
+      useFormValidation();
+
+    const validateName = () => {
+      // error.value = input.value === "" ? "Address is required" : ""; replaced by below
+      validateNameField("Name", inputName.value);
+    };
+
+    const validateEmail = () => {
+      validateEmailField("Email", inputEmail.value);
+    };
+
+    const validatePhone = () => {
+      validatePhoneField("Phone", inputPhone.value);
+    };
+
+    const today = new Date();
+    let date =
+      today.getFullYear() +
+      "-" +
+      (today.getMonth() + 1) +
+      "-" +
+      today.getDate();
+    let time = today.getHours() + ":" + today.getMinutes();
+    const dateTime = date + " " + time;
+
+    const handleSubmit = async () => {
+      const colRef = collection(db, "purchasedUsers");
+
+      await addDoc(colRef, {
+        inputName: inputName.value,
+        inputEmail: inputEmail.value,
+        inputPhone: inputPhone.value,
+        name: name.value,
+        uid: uid.value,
+        dateTime: dateTime,
+      });
+
+      console.log(inputName);
+      router.push({ name: "about" });
+    };
+
+    return {
+      inputName,
+      inputEmail,
+      inputPhone,
+      error,
+      name,
+      uid,
+      dateTime,
+      validateName,
+      validateEmail,
+      validatePhone,
+      handleSubmit,
+    };
   },
 };
 </script>
@@ -125,18 +239,13 @@ html {
 
 form {
   width: 581.5px;
-  height: 500vh;
   color: white;
   transition: all 0.5s;
   padding-top: 5px;
   padding-bottom: 5px;
+  height: 500vh;
   /* border: 1px solid #b8b8b8; */
 }
-
-/* .service-information {
-  display: flex;
-  justify-content: space-between;
-} */
 
 h3 {
   text-align: left;
@@ -180,6 +289,56 @@ h3 {
   margin-bottom: 15px;
   padding-bottom: 10px;
   width: 581.5px;
+}
+
+.form-container {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.input {
+  text-align: left;
+  font-family: "D-DIN", Arial;
+  border: 1px solid #818182;
+  background-color: #262626;
+  color: white;
+  transition: 0.4s;
+  outline: none;
+  padding: 15px;
+  padding-left: 20px;
+  width: 581.5px;
+  border-radius: 4px;
+}
+
+.input:focus {
+  outline: 1px solid white;
+}
+
+.error {
+  display: block;
+  color: #f44336;
+  font-family: "D-DIN", Arial;
+  font-size: 12px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding-left: 20px;
+}
+
+#address {
+  text-align: left;
+  font: "D-DIN", Arial;
+  font-family: "D-DIN", Arial;
+  border: 1px solid white;
+  transition: 0.4s;
+  outline: none;
+  padding: 15px;
+  padding-left: 20px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  width: 581.5px;
+  font: 15px "D-DIN", Arial;
+  font-weight: 700;
+  color: hsla(160, 100%, 37%, 1);
 }
 
 .item {

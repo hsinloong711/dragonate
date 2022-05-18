@@ -1,7 +1,7 @@
 <template>
   <!-- <div v-if="error">{{ error }}</div> -->
 
-  <div v-if="product" class="grid">
+  <div v-if="photo" class="grid">
     <div class="product-image">
       <div class="image-container">
         <div
@@ -14,20 +14,20 @@
     </div>
 
     <div class="product-detail">
-      <h2>{{ product.name }}</h2>
+      <h2>{{ photo.name }}</h2>
 
-      <div>
+      <!-- <div>
         <h2 class="price">RM {{ product.price }}</h2>
-      </div>
+      </div> -->
 
-      <div class="description">
+      <!-- <div class="description">
         <h3>Stock</h3>
         <p>{{ product.stock }}</p>
-      </div>
+      </div> -->
 
       <div>
         <h3>Description</h3>
-        <p>{{ product.description }}</p>
+        <p>{{ photo.description }}</p>
       </div>
 
       <!-- <button class="buy--btn">ADD TO CART</button> -->
@@ -47,33 +47,31 @@
 </template>
 
 <script>
-// import { doc, getDoc, onSnapshot } from "firebase/firestore";
-import { collection, doc, getDocs, getDoc } from "firebase/firestore";
-import { db } from "../firebase/config";
+import { db } from "@/firebase/config";
+import { doc } from "firebase/firestore";
 import getCollection from "../composables/getCollection";
 import getUser from "../composables/getUser";
 import { ref } from "vue";
+import { useRoute } from "vue-router";
 
 export default {
-  components: {},
   setup() {
     // const router = useRouter();
+    const route = useRoute();
+
     const { seller, uid } = getUser();
-    const { documents: products } = getCollection("products");
+
+    const { documents: photos } = getCollection("photos");
 
     const name = ref("");
-    const price = ref("");
-    const stock = ref("");
     const description = ref("");
 
-    const product = async (id) => {
-      const docRef = collection(db, c).doc(id).get();
+    const photo = async (photo) => {
+      const docRef = doc(db, "photos", photo.id);
 
       await getDoc(docRef, {
         name: name.value,
         description: description.value,
-        stock: stock.value,
-        price: price.value,
         seller: seller.value,
         uid: uid.value,
       });
@@ -81,13 +79,11 @@ export default {
 
     return {
       name,
-      price,
-      stock,
       description,
       seller,
       uid,
-      product,
-      products,
+      photo,
+      photos,
     };
   },
 };

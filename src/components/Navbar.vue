@@ -4,8 +4,8 @@
     <nav>
       <!-- Router for Home / About / Shop -->
       <router-link class="router" :to="{ name: 'home' }">Home</router-link>
-      <router-link class="router" :to="{ name: 'about' }">About</router-link>
-      <router-link class="router" :to="{ name: 'shop' }">Shop</router-link>
+      <!-- <router-link class="router" :to="{ name: 'about' }">About</router-link> -->
+      <router-link class="router" :to="{ name: 'photo' }">Photo</router-link>
       <router-link class="router" :to="{ name: 'create' }">Create</router-link>
       <router-link class="cart" :to="{ name: 'cart' }">📸</router-link>
 

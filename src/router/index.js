@@ -6,7 +6,7 @@ import About from "../views/About.vue";
 import SignIn from "../views/user/SignIn.vue";
 import Register from "../views/user/Register.vue";
 import Cart from "../views/Cart.vue";
-import Shop from "../views/Shop.vue";
+import Photo from "../views/Photo.vue";
 import Details from "../views/Details.vue";
 import User from "../views/user/User.vue";
 import Create from "../views/Create.vue";
@@ -55,9 +55,9 @@ const router = createRouter({
       component: Register,
     },
     {
-      path: "/shop",
-      name: "shop",
-      component: Shop,
+      path: "/photo",
+      name: "photo",
+      component: Photo,
     },
     {
       path: "/products/:id",

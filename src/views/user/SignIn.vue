@@ -84,7 +84,7 @@ export default {
       signInWithEmailAndPassword(auth, email.value, password.value)
         .then((data) => {
           console.log("User successfully signed in.");
-          alert("Signed in");
+          alert("User successfully signed in.");
 
           router.push("/");
         })

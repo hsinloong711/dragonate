@@ -93,7 +93,7 @@ export default {
         dateTime: dateTime,
       });
       console.log(name.value);
-      router.push({ name: "shop" });
+      router.push({ name: "photo" });
     };
 
     return {

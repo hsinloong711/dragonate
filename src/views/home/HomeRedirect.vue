@@ -89,13 +89,19 @@
                 {{ error.Phone }}
               </div>
               <div v-else>&nbsp;</div>
-              <button :disabled="inputName && inputEmail && inputPhone === ''">
+              <!-- <button :disabled="inputName && inputEmail && inputPhone === ''">
                 Test Purchase
-              </button>
-              <a
-                href="https://checkout.stripe.com/pay/cs_test_a1FIfM6L1XOIRGxLZztm26UZUQL3WhMeIadKv4LUZaeph4bChFVlW2A35R#fidkdWxOYHwnPyd1blpxYHZxWjA0STVNXTdCUFBDYEI1f1xtTDJrYzJVc1dRcTQ1dlxPVk1RVTJrMFxCcmFocXFnPEJ%2FZ29dTTM1MFJgMEBgTTdRdkBkYjdvVEJxZExWVU5yNzRMN3BWRnRfNTVMYHRLY2g0YScpJ3VpbGtuQH11anZgYUxhJz8ncWB2cVpgU2Q9RGdgTHdmYEgwcEA1NTUneCUl"
-                >Buy with Stripe</a
-              >
+              </button> -->
+              <form action="https://buy.stripe.com/test_eVa8AbeIrceM5uE000">
+                <button
+                  @click="handleSubmit"
+                  type="submit"
+                  class="stripe"
+                  :disabled="inputName && inputEmail && inputPhone === ''"
+                >
+                  Buy With Stripe
+                </button>
+              </form>
             </div>
           </form>
         </form>
@@ -142,31 +148,40 @@ export default {
       validatePhoneField("Phone", inputPhone.value);
     };
 
-    const today = new Date();
-    let date =
-      today.getFullYear() +
-      "-" +
-      (today.getMonth() + 1) +
-      "-" +
-      today.getDate();
-    let time = today.getHours() + ":" + today.getMinutes();
-    const dateTime = date + " " + time;
-
-    const handleSubmit = async () => {
-      const colRef = collection(db, "purchasedUsers");
-
-      await addDoc(colRef, {
-        inputName: inputName.value,
-        inputEmail: inputEmail.value,
-        inputPhone: inputPhone.value,
-        name: name.value,
-        uid: uid.value,
-        dateTime: dateTime,
-      });
-
-      console.log(inputName);
-      router.push({ name: "about" });
+    const handleSubmit = () => {
+      console.log(
+        inputName.value,
+        inputEmail.value,
+        inputPhone.value,
+        name.value
+      );
     };
+
+    // const today = new Date();
+    // let date =
+    //   today.getFullYear() +
+    //   "-" +
+    //   (today.getMonth() + 1) +
+    //   "-" +
+    //   today.getDate();
+    // let time = today.getHours() + ":" + today.getMinutes();
+    // const dateTime = date + " " + time;
+
+    // const handleSubmit = async () => {
+    //   const colRef = collection(db, "purchasedUsers");
+
+    //   await addDoc(colRef, {
+    //     inputName: inputName.value,
+    //     inputEmail: inputEmail.value,
+    //     inputPhone: inputPhone.value,
+    //     name: name.value,
+    //     uid: uid.value,
+    //     dateTime: dateTime,
+    //   });
+
+    //   console.log(inputName);
+    //   router.push({ name: "about" });
+    // };
 
     return {
       inputName,
@@ -174,8 +189,6 @@ export default {
       inputPhone,
       error,
       name,
-      uid,
-      dateTime,
       validateName,
       validateEmail,
       validatePhone,
@@ -188,7 +201,7 @@ export default {
 <style scoped>
 html {
   height: 100%;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 /* Split the screen in half */
@@ -197,7 +210,7 @@ html {
   width: 50%;
   position: fixed;
   z-index: 1;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
   padding-top: 20px;
 }
 
@@ -243,7 +256,7 @@ form {
   transition: all 0.5s;
   padding-top: 5px;
   padding-bottom: 5px;
-  height: 500vh;
+  /* height: 100vh; */
   /* border: 1px solid #b8b8b8; */
 }
 
@@ -344,6 +357,18 @@ h3 {
 .item {
   font-weight: 400;
   font: 15px "D-DIN", Arial;
+}
+
+.stripe {
+  padding: 10px;
+  padding-left: 40px;
+  padding-right: 40px;
+  background-color: white;
+  font-size: 14px;
+  border-radius: 4px;
+  color: black;
+  cursor: pointer;
+  float: right;
 }
 
 #stars {

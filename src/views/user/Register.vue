@@ -52,14 +52,12 @@
 import { ref } from "vue";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "vue-router";
-import { db } from "@/firebase/config";
-import { setDoc, collection } from "firebase/firestore";
+
 export default {
   setup() {
     const email = ref("");
     const password = ref("");
     const errorMsg = ref("");
-    const freeTrial = ref(true);
     const router = useRouter();
 
     const register = () => {
@@ -67,7 +65,7 @@ export default {
       createUserWithEmailAndPassword(auth, email.value, password.value)
         .then((data) => {
           console.log("User successfully registered.");
-          alert("DONE");
+          alert("User successfuly registered");
           router.push("/");
         })
         .catch((error) => {
@@ -88,15 +86,6 @@ export default {
           }
         });
     };
-
-    // const handleSubmit = async () => {
-    //   const colRef = collection(db, "users");
-
-    //   await setDoc(colRef, {
-    //     email: email.value,
-    //     freeTrial: freeTrial.value,
-    //   });
-    // };
 
     return {
       email,
